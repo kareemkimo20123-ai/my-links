@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kareem | روابطي</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: #000;
+    overflow-x: hidden;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px 16px 60px;
+    position: relative;
+  }
+
+  canvas#sand {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .glow-bg {
+    position: fixed;
+    top: -20%; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%);
+    z-index: 0;
+    animation: pulseGlow 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: .5; transform: translateX(-50%) scale(1); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 430px;
+    text-align: center;
+    animation: fadeInUp 1s ease both;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .avatar-wrap {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 18px;
+  }
+  .avatar-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #fff, #444, #fff, #444, #fff);
+    animation: spin 4s linear infinite;
+    filter: blur(0.3px);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .avatar {
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #000;
+    border: 3px solid #000;
+    z-index: 1;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.1);
+    display: block;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #fff, #999, #fff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 3s linear infinite;
+  }
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+
+  .tagline {
+    font-size: 15px;
+    color: #ccc;
+    margin-bottom: 24px;
+    animation: flicker 2.5s ease-in-out infinite;
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .6; }
+  }
+
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 34px;
+  }
+  .socials a {
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .socials a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    transform: translateY(100%);
+    transition: transform .3s ease;
+    z-index: -1;
+  }
+  .socials a span { position: relative; z-index: 1; transition: color .3s; }
+  .socials a:hover {
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 0 8px 20px rgba(255,255,255,0.25);
+  }
+  .socials a:hover::before { transform: translateY(0); }
+  .socials a:hover span { color: #000; }
+
+  .link-btn {
+    display: block;
+    width: 100%;
+    background: transparent;
+    color: #fff;
+    text-decoration: none;
+    padding: 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 16px;
+    border: 1.5px solid #fff;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: color .35s ease, transform .25s ease, letter-spacing .3s ease;
+  }
+  .link-btn::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: #fff;
+    z-index: -1;
+    transition: left .4s cubic-bezier(.65,0,.35,1);
+  }
+  .link-btn:hover {
+    color: #000;
+    transform: translateY(-4px) scale(1.02);
+    letter-spacing: 1px;
+  }
+  .link-btn:hover::before { left: 0; }
+  .link-btn:active { transform: translateY(0) scale(0.98); }
+
+  footer {
+    margin-top: 34px;
+    font-size: 12px;
+    color: #777;
+    position: relative;
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="sand"></canvas>
+<div class="glow-bg"></div>
+
+  <div class="container">
+    <div class="avatar-wrap">
+      <div class="avatar-ring"></div>
+      <div class="avatar">
+        <img src="profile.png" alt="Kareem">
+      </div>
+    </div>
+    <h1>Kareem</h1>
+    <p class="tagline">صلي على النبي 🤍</p>
+
+    <div class="socials">
+      <a href="https://www.instagram.com/kareemkimo2028/" target="_blank" title="انستجرام"><span>I</span></a>
+      <a href="https://www.facebook.com/profile.php?id=61592983341539" target="_blank" title="فيسبوك"><span>f</span></a>
+      <a href="https://www.tiktok.com/@edit_with_kareem" target="_blank" title="تيك توك"><span>T</span></a>
+      <a href="https://www.youtube.com/@KareemKimo526" target="_blank" title="يوتيوب"><span>▶</span></a>
+    </div>
+
+    <a class="link-btn" href="https://www.youtube.com/@KareemKimo526" target="_blank">يوتيوب</a>
+    <a class="link-btn" href="https://www.instagram.com/kareemkimo2028/" target="_blank">انستجرام</a>
+    <a class="link-btn" href="https://www.facebook.com/profile.php?id=61592983341539" target="_blank">فيسبوك</a>
+    <a class="link-btn" href="https://www.tiktok.com/@edit_with_kareem" target="_blank">تيك توك</a>
+
+    <footer>صُنع بحب</footer>
+  </div>
+
+<script>
+  const canvas = document.getElementById('sand');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const PARTICLE_COUNT = 160;
+  const particles = [];
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: rand(0, w),
+      y: rand(0, h),
+      r: rand(0.6, 2.2),
+      speedX: rand(0.4, 1.8),
+      speedY: rand(-0.3, 0.3),
+      alpha: rand(0.15, 0.6),
+      drift: rand(0, Math.PI * 2)
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    for (const p of particles) {
+      p.drift += 0.01;
+      p.x += p.speedX + Math.sin(p.drift) * 0.5;
+      p.y += p.speedY + Math.cos(p.drift) * 0.3;
+
+      if (p.x > w + 10) p.x = -10;
+      if (p.x < -10) p.x = w + 10;
+      if (p.y > h + 10) p.y = -10;
+      if (p.y < -10) p.y = h + 10;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(230, 210, 170, ${p.alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+</script>
+
+</body>
+</html>
